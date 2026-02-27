@@ -1,0 +1,205 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}Analytics - Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5">
+            <i class="bi bi-bar-chart"></i> Habit Analytics
+        </h1>
+        <p class="lead text-muted">Comprehensive statistics and insights about your habits</p>
+    </div>
+</div>
+
+<!-- Overall Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-graph-up"></i> Overall Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="text-center">
+                            <h2 class="text-primary">{{ stats.total_habits }}</h2>
+                            <p class="text-muted mb-0">Total Active Habits</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="text-center">
+                            <h2 class="text-success">{{ stats.total_completions }}</h2>
+                            <p class="text-muted mb-0">Total Completions</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="text-center">
+                            <h2 class="text-info">{{ stats.average_streak }}</h2>
+                            <p class="text-muted mb-0">Average Streak</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="text-center">
+                            <h2 class="text-warning">{{ stats.daily_habits }}/{{ stats.weekly_habits }}</h2>
+                            <p class="text-muted mb-0">Daily / Weekly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Longest Streak -->
+{% if longest_streak_info.habit %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">
+                    <i class="bi bi-trophy"></i> Longest Streak Achievement
+                </h5>
+            </div>
+            <div class="card-body">
+                <h4>{{ longest_streak_info.habit.task }}</h4>
+                <p class="mb-0">
+                    <span class="streak-badge">
+                        <i class="bi bi-fire"></i> {{ longest_streak_info.streak }} {{ longest_streak_info.habit.periodicity }} periods
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Best Performers -->
+{% if best_performers %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-star"></i> Best Performing Habits
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for habit in best_performers %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ habit.task }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ habit.periodicity }}</span>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary me-2">Current: {{ habit.current_streak }}</span>
+                            <span class="badge bg-success">Best: {{ habit.longest_streak }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Habits by Periodicity -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-calendar-day"></i> Daily Habits ({{ daily_habits|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if daily_habits %}
+                <ul class="list-group">
+                    {% for habit in daily_habits %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ habit.task }}
+                        <span class="badge bg-primary">{{ habit.current_streak }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No daily habits tracked</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-calendar-week"></i> Weekly Habits ({{ weekly_habits|length }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if weekly_habits %}
+                <ul class="list-group">
+                    {% for habit in weekly_habits %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ habit.task }}
+                        <span class="badge bg-primary">{{ habit.current_streak }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No weekly habits tracked</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Struggling Habits -->
+{% if struggling_habits %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> Habits Needing Attention
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>These habits have low streaks. Consider focusing on these to build better consistency.</p>
+                <div class="list-group">
+                    {% for habit in struggling_habits %}
+                    <div class="list-group-item">
+                        {{ habit.task }} <span class="badge bg-warning text-dark">{{ habit.current_streak }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- API Links -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-code-square"></i> API Endpoints
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>Access your habit data programmatically:</p>
+                <ul>
+                    <li><a href="{% url 'api_habit_list' %}" target="_blank">All Habits JSON</a></li>
+                    <li><a href="{% url 'api_analytics' %}" target="_blank">Analytics JSON</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

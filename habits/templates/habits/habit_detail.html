@@ -1,0 +1,113 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}{{ habit.task }} - Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'habit_list' %}">Habits</a></li>
+                <li class="breadcrumb-item active">{{ habit.task }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">{{ habit.task }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card bg-light">
+                            <div class="stat-number text-primary">{{ current_streak }}</div>
+                            <div class="text-muted">Current Streak</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card bg-light">
+                            <div class="stat-number text-success">{{ longest_streak }}</div>
+                            <div class="text-muted">Longest Streak</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card bg-light">
+                            <div class="stat-number text-info">{{ completion_rate }}%</div>
+                            <div class="text-muted">30-Day Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card stat-card bg-light">
+                            <div class="stat-number text-warning">{{ habit.periodicity|title }}</div>
+                            <div class="text-muted">Periodicity</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-2 mb-4">
+                    {% if is_completed_today %}
+                    <button class="btn btn-success" disabled>
+                        <i class="bi bi-check-circle"></i> Completed Today!
+                    </button>
+                    {% else %}
+                    <a href="{% url 'complete_habit' habit.id %}" class="btn btn-success">
+                        <i class="bi bi-check2"></i> Mark as Complete
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'delete_habit' habit.id %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete Habit
+                    </a>
+                </div>
+                
+                <p class="text-muted mb-0">
+                    <i class="bi bi-calendar"></i> Created: {{ habit.created_at|date:"F d, Y" }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Recent Completions (Last 30 Days)
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_completions %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Days Ago</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for completion in recent_completions %}
+                            <tr>
+                                <td>{{ completion.completed_at|date:"F d, Y - g:i A" }}</td>
+                                <td>{{ completion.completed_at|timesince }} ago</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="text-muted mt-2">No completions in the last 30 days</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

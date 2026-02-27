@@ -1,0 +1,59 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}Add Habit - Habit Tracker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="bi bi-plus-circle"></i> Add New Habit
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="task" class="form-label">Habit Description *</label>
+                        <input type="text" class="form-control" id="task" name="task" 
+                               placeholder="e.g., Exercise for 30 minutes" required maxlength="255">
+                        <div class="form-text">Describe what you want to track</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="periodicity" class="form-label">Periodicity *</label>
+                        <select class="form-select" id="periodicity" name="periodicity" required>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                        <div class="form-text">How often do you want to complete this habit?</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Create Habit
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5><i class="bi bi-lightbulb"></i> Tips for Success</h5>
+                <ul class="mb-0">
+                    <li>Be specific with your habit description</li>
+                    <li>Start with achievable goals</li>
+                    <li>Daily habits help build consistency</li>
+                    <li>Weekly habits are great for bigger commitments</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

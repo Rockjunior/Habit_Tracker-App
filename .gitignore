@@ -76,4 +76,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.QUICKSTART.md
+# Documentation
+QUICKSTART.md

@@ -23,7 +23,7 @@ class TestHabitModel:
     """Test cases for the Habit model."""
     
     def test_create_habit(self):
-        """Test creating a new habit."""
+        """Verify we can create a new habit with proper fields."""
         habit = Habit.objects.create(
             task="Test habit",
             periodicity="daily"
@@ -34,7 +34,7 @@ class TestHabitModel:
         assert habit.created_at is not None
     
     def test_habit_string_representation(self):
-        """Test the string representation of a habit."""
+        """Make sure habits display nicely as strings."""
         habit = Habit.objects.create(
             task="Exercise",
             periodicity="daily"
@@ -42,7 +42,7 @@ class TestHabitModel:
         assert str(habit) == "Exercise (daily)"
     
     def test_complete_task(self):
-        """Test completing a habit task."""
+        """Check that we can mark a habit as complete and it creates a record."""
         habit = Habit.objects.create(
             task="Read",
             periodicity="daily"
@@ -54,7 +54,7 @@ class TestHabitModel:
         assert habit.completions.count() == 1
     
     def test_is_completed_today_daily(self):
-        """Test checking if a daily habit is completed today."""
+        """Verify daily habits correctly report whether they're done today."""
         habit = Habit.objects.create(
             task="Daily task",
             periodicity="daily"
@@ -66,7 +66,7 @@ class TestHabitModel:
         assert habit.is_completed_today() is True
     
     def test_get_current_streak_daily(self):
-        """Test calculating current streak for daily habits."""
+        """Ensure we accurately calculate current streaks for daily habits."""
         habit = Habit.objects.create(
             task="Daily habit",
             periodicity="daily"
@@ -74,7 +74,7 @@ class TestHabitModel:
         
         now = timezone.now()
         
-        # Create completions for last 3 days at different times
+        # Add completions for the last 3 days with different completion times
         habit.complete_task(now)
         habit.complete_task(now.replace(hour=0, minute=0) - timedelta(hours=1))  # Yesterday
         habit.complete_task(now.replace(hour=0, minute=0) - timedelta(hours=25))  # Day before
@@ -84,7 +84,7 @@ class TestHabitModel:
         assert habit.completions.count() == 3  # Should have 3 completions
     
     def test_get_current_streak_with_break(self):
-        """Test that streak breaks when a day is missed."""
+        """Make sure streaks stop counting when you skip a day."""
         habit = Habit.objects.create(
             task="Daily habit",
             periodicity="daily"
@@ -101,7 +101,7 @@ class TestHabitModel:
         assert streak >= 1  # Should have at least 1 day streak
     
     def test_get_longest_streak(self):
-        """Test calculating the longest streak."""
+        """Verify we can find the longest streak even if there are gaps."""
         habit = Habit.objects.create(
             task="Daily habit",
             periodicity="daily",
@@ -110,13 +110,13 @@ class TestHabitModel:
         
         now = timezone.now()
         
-        # Create a streak of 5 days
+        # Build a 5-day streak
         for i in range(5):
             habit.complete_task(now - timedelta(days=i))
         
         # Skip 3 days
         
-        # Create earlier streak of 7 days
+        # Build an older 7-day streak
         for i in range(7):
             habit.complete_task(now - timedelta(days=8 + i))
         
@@ -124,7 +124,7 @@ class TestHabitModel:
         assert longest == 7
     
     def test_weekly_habit_streak(self):
-        """Test streak calculation for weekly habits."""
+        """Check streak calculations work properly for weekly habits."""
         habit = Habit.objects.create(
             task="Weekly habit",
             periodicity="weekly",
@@ -133,7 +133,7 @@ class TestHabitModel:
         
         now = timezone.now()
         
-        # Complete for last 3 weeks
+        # Complete it for the last 3 weeks
         for i in range(3):
             date = now - timedelta(weeks=i)
             habit.complete_task(date)
@@ -147,7 +147,7 @@ class TestHabitCompletion:
     """Test cases for the HabitCompletion model."""
     
     def test_create_completion(self):
-        """Test creating a habit completion."""
+        """Ensure we can create and save habit completion records."""
         habit = Habit.objects.create(
             task="Test",
             periodicity="daily"
@@ -162,7 +162,7 @@ class TestHabitCompletion:
         assert completion.completed_at is not None
     
     def test_completion_string_representation(self):
-        """Test the string representation of a completion."""
+        """Verify completion records have readable string output."""
         habit = Habit.objects.create(task="Test", periodicity="daily")
         completion = HabitCompletion.objects.create(habit=habit)
         
@@ -174,7 +174,7 @@ class TestAnalytics:
     """Test cases for the analytics module (functional programming)."""
     
     def test_get_all_habits(self):
-        """Test retrieving all active habits."""
+        """Check that we can retrieve and format all active habits."""
         Habit.objects.create(task="Habit 1", periodicity="daily")
         Habit.objects.create(task="Habit 2", periodicity="weekly")
         Habit.objects.create(task="Inactive", periodicity="daily", is_active=False)
@@ -187,7 +187,7 @@ class TestAnalytics:
         assert all('current_streak' in h for h in result)
     
     def test_get_habits_by_periodicity(self):
-        """Test filtering habits by periodicity."""
+        """Verify we can filter habits by how often they should be done."""
         Habit.objects.create(task="Daily 1", periodicity="daily")
         Habit.objects.create(task="Daily 2", periodicity="daily")
         Habit.objects.create(task="Weekly 1", periodicity="weekly")
@@ -200,17 +200,17 @@ class TestAnalytics:
         assert len(weekly) == 1
     
     def test_get_longest_streak_all_habits(self):
-        """Test finding the longest streak across all habits."""
+        """Make sure we can find the overall best streak across all habits."""
         habit1 = Habit.objects.create(task="Habit 1", periodicity="daily")
         habit2 = Habit.objects.create(task="Habit 2", periodicity="daily")
         
         now = timezone.now()
         
-        # Habit 1: streak of 3
+        # Habit 1 has a 3-day streak
         for i in range(3):
             habit1.complete_task(now - timedelta(days=i))
         
-        # Habit 2: streak of 5
+        # Habit 2 has a 5-day streak
         for i in range(5):
             habit2.complete_task(now - timedelta(days=i))
         
@@ -221,7 +221,7 @@ class TestAnalytics:
         assert result['habit']['task'] == "Habit 2"
     
     def test_get_completion_stats(self):
-        """Test calculating comprehensive statistics."""
+        """Verify we can generate detailed statistics about all habits."""
         Habit.objects.create(task="Daily 1", periodicity="daily")
         Habit.objects.create(task="Daily 2", periodicity="daily")
         Habit.objects.create(task="Weekly 1", periodicity="weekly")
@@ -236,13 +236,13 @@ class TestAnalytics:
         assert 'average_streak' in stats
     
     def test_get_struggling_habits(self):
-        """Test identifying habits with low streaks."""
+        """Check that we can identify habits that need more attention."""
         habit1 = Habit.objects.create(task="Struggling", periodicity="daily")
         habit2 = Habit.objects.create(task="Good", periodicity="daily")
         
         now = timezone.now()
         
-        # Habit 2 has better streak - complete for multiple days
+        # Give habit 2 a solid streak to contrast with habit 1
         habit2.complete_task(now)
         habit2.complete_task(now.replace(hour=0, minute=0) - timedelta(hours=1))
         habit2.complete_task(now.replace(hour=0, minute=0) - timedelta(hours=25))
@@ -252,18 +252,18 @@ class TestAnalytics:
         habits = Habit.objects.all()
         struggling = analytics.get_struggling_habits(habits)
         
-        # At least one habit should be struggling (habit1 with 0 streak)
+        # At least habit1 should show up since it has no completions
         assert len(struggling) >= 1
         struggling_tasks = [h['task'] for h in struggling]
         assert "Struggling" in struggling_tasks
     
     def test_calculate_completion_rate(self):
-        """Test calculating completion rate for a habit."""
+        """Ensure we can calculate what percentage of days a habit was completed."""
         habit = Habit.objects.create(task="Test", periodicity="daily")
         
         now = timezone.now()
         
-        # Complete 15 out of last 30 days
+        # Complete it every other day for 30 days (about 15 times)
         for i in range(0, 30, 2):  # Every other day
             habit.complete_task(now - timedelta(days=i))
         
@@ -278,11 +278,11 @@ class TestViews:
     """Test cases for views."""
     
     def setup_method(self):
-        """Set up test client."""
+        """Initialize a test client for making requests."""
         self.client = Client()
     
     def test_home_view(self):
-        """Test the home page view."""
+        """Verify the home page loads and shows habits and stats."""
         response = self.client.get(reverse('home'))
         
         assert response.status_code == 200
@@ -290,7 +290,7 @@ class TestViews:
         assert 'stats' in response.context
     
     def test_habit_list_view(self):
-        """Test the habit list view."""
+        """Make sure the habit list page displays all habits."""
         Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('habit_list'))
@@ -299,13 +299,13 @@ class TestViews:
         assert 'habits' in response.context
     
     def test_add_habit_view_get(self):
-        """Test GET request to add habit page."""
+        """Check that the add habit form page loads."""
         response = self.client.get(reverse('add_habit'))
         
         assert response.status_code == 200
     
     def test_add_habit_view_post(self):
-        """Test POST request to create a new habit."""
+        """Verify we can submit the form to create a new habit."""
         data = {
             'task': 'New Habit',
             'periodicity': 'daily'
@@ -317,7 +317,7 @@ class TestViews:
         assert Habit.objects.filter(task='New Habit').exists()
     
     def test_habit_detail_view(self):
-        """Test the habit detail view."""
+        """Ensure the detail page shows information about a specific habit."""
         habit = Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('habit_detail', args=[habit.id]))
@@ -326,7 +326,7 @@ class TestViews:
         assert response.context['habit'] == habit
     
     def test_complete_habit_view(self):
-        """Test completing a habit via view."""
+        """Verify clicking complete actually records a completion."""
         habit = Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('complete_habit', args=[habit.id]))
@@ -335,7 +335,7 @@ class TestViews:
         assert habit.completions.count() == 1
     
     def test_analytics_view(self):
-        """Test the analytics dashboard view."""
+        """Check that the analytics dashboard loads with proper data."""
         Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('analytics'))
@@ -345,7 +345,7 @@ class TestViews:
         assert 'all_habits' in response.context
     
     def test_api_habit_list(self):
-        """Test the API endpoint for habit list."""
+        """Verify the API returns habit data in JSON format."""
         Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('api_habit_list'))
@@ -356,7 +356,7 @@ class TestViews:
         assert 'habits' in json_data
     
     def test_api_analytics(self):
-        """Test the API endpoint for analytics."""
+        """Ensure the API returns analytics data correctly."""
         Habit.objects.create(task="Test", periodicity="daily")
         
         response = self.client.get(reverse('api_analytics'))
@@ -372,14 +372,14 @@ class HabitModelTestCase(TestCase):
     """Additional test cases using Django's TestCase."""
     
     def test_habit_creation_defaults(self):
-        """Test habit creation with default values."""
+        """Verify that new habits get sensible default values."""
         habit = Habit.objects.create(task="Test")
         
         self.assertEqual(habit.periodicity, "daily")
         self.assertTrue(habit.is_active)
     
     def test_habit_ordering(self):
-        """Test that habits are ordered by creation date (newest first)."""
+        """Check that habits are sorted with newest ones first."""
         old_habit = Habit.objects.create(
             task="Old",
             created_at=timezone.now() - timedelta(days=5)

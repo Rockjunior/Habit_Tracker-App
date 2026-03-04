@@ -15,9 +15,10 @@ from . import analytics
 
 def home(request):
     """
-    Home page view showing overview of all habits.
+    Your personal habit dashboard.
     
-    Displays a summary of habits with their current streaks and quick actions.
+    This is the first thing you see when you open the app! Shows all your habits,
+    your stats, your best performers, and habits that need some love.
     """
     habits = Habit.objects.filter(is_active=True)
     
@@ -37,8 +38,10 @@ def home(request):
 
 
 def habit_list(request):
-    """
-    Display a list of all active habits.
+    """Browse all your habits in one place.
+    
+    See all your active habits at a glance. You can filter by daily or weekly
+    to focus on just the type you want to work on right now.
     """
     periodicity_filter = request.GET.get('periodicity', '')
     
@@ -57,9 +60,10 @@ def habit_list(request):
 
 def habit_detail(request, habit_id):
     """
-    Display detailed information about a specific habit.
+    Dive deep into one habit's performance.
     
-    Shows completion history, streaks, and analytics for the habit.
+    See everything about a specific habit: your current streak, your personal best,
+    how consistently you're completing it, and your recent completion history.
     """
     habit = get_object_or_404(Habit, id=habit_id)
     
@@ -87,8 +91,10 @@ def habit_detail(request, habit_id):
 
 
 def add_habit(request):
-    """
-    Handle the creation of a new habit.
+    """Create a new habit to start tracking.
+    
+    Whether you want a daily meditation practice or a weekly gym session,
+    add it here and start building your streaks!
     """
     if request.method == 'POST':
         task = request.POST.get('task', '').strip()
@@ -115,8 +121,9 @@ def add_habit(request):
 
 
 def complete_habit(request, habit_id):
-    """
-    Mark a habit as completed for the current period.
+    """Mark a habit as done for today (or this week)!
+    
+    One click and you've got a completion recorded. Watch your streak grow!
     """
     habit = get_object_or_404(Habit, id=habit_id)
     

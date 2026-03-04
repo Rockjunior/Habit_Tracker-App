@@ -1,8 +1,8 @@
 """
-Management command to populate the database with predefined habits and test data.
+Management command to populate the database with sample data.
 
-This command creates 5 predefined habits (mix of daily and weekly) and generates
-4 weeks of tracking data for each habit to demonstrate the application functionality.
+Run this to fill your app with 5 realistic example habits and 4 weeks of tracking data.
+Great for testing, demos, or just playing around with the app!
 """
 
 from django.core.management.base import BaseCommand
@@ -13,7 +13,7 @@ import random
 
 
 class Command(BaseCommand):
-    help = 'Populate the database with 5 predefined habits and 4 weeks of test data'
+    help = 'Fill your database with 5 example habits and 4 weeks of realistic tracking data'
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Starting to populate database with predefined habits...'))
@@ -81,11 +81,14 @@ class Command(BaseCommand):
     
     def _generate_completions(self, habit, completion_rate):
         """
-        Generate completions for a habit over 4 weeks based on completion rate.
+        Create realistic completion data for a habit over the past 4 weeks.
+        
+        Based on a completion rate (like 85%), randomly decides whether the habit
+        was completed on each day/week to create realistic-looking data.
         
         Args:
-            habit: The Habit object
-            completion_rate: Probability of completing the habit (0.0 to 1.0)
+            habit: The habit to generate data for
+            completion_rate: What % of days/weeks should have completions (0.0 to 1.0)
         """
         now = timezone.now()
         

@@ -1,5 +1,8 @@
 """
-URL configuration for the habits app.
+URL routes for the Habit Tracker app.
+
+Everything from viewing your habits to completing them to checking out your stats
+goes through these URLs. Routes handle both the web interface and API endpoints.
 """
 
 from django.urls import path

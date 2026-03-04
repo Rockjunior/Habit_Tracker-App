@@ -1,12 +1,9 @@
 """
-Comprehensive test suite for the Habit Tracker Application.
+Comprehensive test suite for Habit Tracker.
 
-This module contains unit tests for:
-- Habit model functionality
-- HabitCompletion model functionality
-- Streak calculation logic
-- Analytics module (functional programming)
-- Views and API endpoints
+These tests make sure everything works as expected: creating habits, tracking completions,
+calculating streaks, analyzing your data, and all the web pages and API endpoints.
+When all tests pass, you know the app is solid!
 """
 
 import pytest
@@ -20,7 +17,7 @@ from . import analytics
 
 @pytest.mark.django_db
 class TestHabitModel:
-    """Test cases for the Habit model."""
+    """Test the Habit model - creating them, completing them, calculating streaks."""
     
     def test_create_habit(self):
         """Verify we can create a new habit with proper fields."""
@@ -144,7 +141,7 @@ class TestHabitModel:
 
 @pytest.mark.django_db
 class TestHabitCompletion:
-    """Test cases for the HabitCompletion model."""
+    """Test the HabitCompletion model - recording when habits get completed."""
     
     def test_create_completion(self):
         """Ensure we can create and save habit completion records."""
@@ -171,7 +168,7 @@ class TestHabitCompletion:
 
 @pytest.mark.django_db
 class TestAnalytics:
-    """Test cases for the analytics module (functional programming)."""
+    """Test the analytics engine - make sure your stats are accurate!"""
     
     def test_get_all_habits(self):
         """Check that we can retrieve and format all active habits."""
@@ -275,7 +272,7 @@ class TestAnalytics:
 
 @pytest.mark.django_db
 class TestViews:
-    """Test cases for views."""
+    """Test all the web pages - making sure they load and work correctly."""
     
     def setup_method(self):
         """Initialize a test client for making requests."""
@@ -369,7 +366,7 @@ class TestViews:
 
 # Django TestCase classes for additional coverage
 class HabitModelTestCase(TestCase):
-    """Additional test cases using Django's TestCase."""
+    """Additional tests for the Habit model using Django's test tools."""
     
     def test_habit_creation_defaults(self):
         """Verify that new habits get sensible default values."""

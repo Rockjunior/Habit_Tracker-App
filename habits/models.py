@@ -6,17 +6,17 @@ from typing import List, Optional
 
 class Habit(models.Model):
     """
-    Represents a habit that a user wants to track.
+    A habit you want to build and track.
     
-    A habit consists of a task that should be completed with a specific periodicity
-    (e.g., daily or weekly). The habit tracks when it was created and maintains
-    a relationship with its completions.
+    A habit is simply something you want to do regularly - brush your teeth daily,
+    go to yoga weekly, whatever! The app tracks when you complete it and keeps
+    count of your awesome streaks.
     
     Attributes:
-        task (str): Description of the habit task
-        periodicity (str): How often the habit should be completed ('daily' or 'weekly')
-        created_at (datetime): When the habit was created
-        is_active (bool): Whether the habit is currently being tracked
+        task (str): What you're trying to accomplish
+        periodicity (str): How often ('daily' or 'weekly')
+        created_at (datetime): When you started tracking this habit
+        is_active (bool): Whether you're currently working on it
     """
     
     PERIODICITY_CHOICES = [
@@ -55,15 +55,16 @@ class Habit(models.Model):
         return f"{self.task} ({self.periodicity})"
     
     def complete_task(self, completion_date: Optional[datetime] = None) -> 'HabitCompletion':
-        """
-        Mark the habit as completed for a specific date.
+        """Record a completion for this habit.
+        
+        Mark it done today, or log a past completion if you forgot to check it off.
+        Creates a timestamp record so we know exactly when you crushed this habit!
         
         Args:
-            completion_date: The date/time when the task was completed.
-                           Defaults to current time if not provided.
+            completion_date: When you completed it (defaults to right now)
         
         Returns:
-            HabitCompletion: The created completion record
+            The completion record we just created
         """
         if completion_date is None:
             completion_date = timezone.now()
@@ -84,6 +85,10 @@ class Habit(models.Model):
         return self.completions.all().order_by('completed_at')
     
     def get_current_streak(self) -> int:
+        """How many days/weeks have you kept this going without breaking?
+        
+        This is the "magic number" - your current unbroken streak. Build it up!
+        """
         """
         Calculate the current streak for this habit.
         
@@ -142,6 +147,11 @@ class Habit(models.Model):
         return streak
     
     def get_longest_streak(self) -> int:
+        """Your personal best streak for this habit.
+        
+        This is your record - the longest unbroken streak you've ever achieved.
+        Something to be proud of!
+        """
         """
         Calculate the longest streak ever achieved for this habit.
         
@@ -199,6 +209,10 @@ class Habit(models.Model):
             return monday.replace(hour=0, minute=0, second=0, microsecond=0)
     
     def is_completed_today(self) -> bool:
+        """Did you already complete this habit today (or this week)?
+        
+        Checks if you've already got a completion recorded for the current period.
+        """
         """
         Check if the habit has been completed in the current period.
         
@@ -216,14 +230,15 @@ class Habit(models.Model):
 
 class HabitCompletion(models.Model):
     """
-    Represents a single completion of a habit.
+    A single time you marked a habit as complete.
     
-    Each time a user marks a habit as complete, a HabitCompletion record
-    is created with the timestamp of when it was completed.
+    Every time you click "Done!" on a habit, we create one of these records.
+    It's basically a timestamp saying "yes, I did this thing!" These records
+    add up to create your streaks and show your awesome history.
     
     Attributes:
-        habit (Habit): The habit that was completed
-        completed_at (datetime): When the habit was completed
+        habit (Habit): Which habit you completed
+        completed_at (datetime): The exact moment you completed it
     """
     
     habit = models.ForeignKey(

@@ -1,5 +1,7 @@
 # Habit Tracker App
 
+<img src="assets/images/homepage.png" alt="Alt text" width="300">
+
 Build better routines, one checkmark at a time.
 
 This is a Django-based habit tracking app where you can create habits, mark them as complete, and track progress with streaks and analytics. It was developed as part of the **DLBDSOOFPP01** (Object-Oriented and Functional Programming with Python) portfolio assignment.
@@ -11,6 +13,11 @@ This is a Django-based habit tracking app where you can create habits, mark them
 - Track **current streak** and **longest streak**
 - View analytics for best-performing and struggling habits
 - Use JSON API endpoints for habits and analytics
+
+<video width="600" controls>
+  <source src="assets/videos/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Tech stack
 

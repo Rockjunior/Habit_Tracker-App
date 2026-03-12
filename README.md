@@ -21,7 +21,7 @@ This is a Django-based habit tracking app where you can create habits, mark them
 - Use JSON API endpoints for habits and analytics
 
 <video width="600" controls>
-  <source src="assets/videos/demo.webm" type="video/webm">
+  <!-- <source src="assets/videos/demo.webm" type="video/webm"> -->
   <source src="assets/videos/demo.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>

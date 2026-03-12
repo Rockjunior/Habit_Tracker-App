@@ -20,9 +20,8 @@ This is a Django-based habit tracking app where you can create habits, mark them
 - View analytics for best-performing and struggling habits
 - Use JSON API endpoints for habits and analytics
 
-<video width="600" controls autoplay muted loop>
+<video width="600" controls>
   <source src="assets/videos/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
 </video>
 
 ## Tech stack

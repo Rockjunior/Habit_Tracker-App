@@ -5,7 +5,7 @@
 <p>
 
 <p align="center">
-  <img src="assets/files/image.png" alt="Alt text" width="300">
+  <img src="assets/images/homepage.png" alt="Alt text" width="300">
 </p>
 
 Build better routines, one checkmark at a time.

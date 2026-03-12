@@ -1,11 +1,11 @@
 # Habit Tracker App
 
-<p align="centre">
+<!-- <p align="centre">
   <img src="assets/images/homepage.png" alt="Alt text" width="500">
-<p>
+<p> -->
 
 <p align="center">
-  <img src="assets/images/homepage.png" alt="Alt text" width="300">
+  <img src="assets/images/homepage.png" alt="Alt text" width="400">
 </p>
 
 Build better routines, one checkmark at a time.

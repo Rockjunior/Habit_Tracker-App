@@ -75,3 +75,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Cython debug symbols
+*.pyc
+
+# Markdown & other files
+concept_paper_copy.md
+CONCEPT_PAPER.md
+concept.html
+PRESENTATION_SLIDES.md
+Live_HabitTracker-sep25 1.pdf
+Live_HabitTracker-October.pdf
+Assignments Portfolio_DLBDSOOFPP01.pdf
